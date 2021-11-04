@@ -24,14 +24,14 @@ export class User extends BaseEntity {
     @Column()
     password: string;
   
-    @CreateDateColumn()
+    @CreateDateColumn({})
     createdAt: Date;
  
     @UpdateDateColumn()
     updatedAt: Date;
   
   
-    @OneToOne(() => UserRoles)
+    @OneToOne( ()=> UserRoles)
     @JoinColumn()
     role: UserRoles;
   

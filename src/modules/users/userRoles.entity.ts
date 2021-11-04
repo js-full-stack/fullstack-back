@@ -1,22 +1,14 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
 import { User } from './user.entity'
 
- enum UserRole {
-  COUCH = 'couch',
-  ATHLETE = 'athlete'
-}
 
 
-@Entity('roles')
+@Entity()
 export class UserRoles  {
   @PrimaryGeneratedColumn()
-  id: number;
+  roleId: number;
     
-  @Column({
-    type: 'enum',
-    enum: UserRole,
-    default: UserRole.ATHLETE
-  })
-  role: UserRole; 
+  @Column({})
+  role: string; 
 }
     

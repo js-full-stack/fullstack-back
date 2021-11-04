@@ -20,8 +20,8 @@ export class UserController {
 
 
   @Post('/create')
-  @HttpCode(201)
   @UsePipes(ValidationPipe)
+  
   async createUser(@Body(SETTINGS.VALIDATION_PIPE) userRegister: UserRegisterDto,
   ): Promise<User> {
     return await this.userService.doUserRegistration(userRegister)

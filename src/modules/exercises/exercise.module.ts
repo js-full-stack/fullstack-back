@@ -8,4 +8,4 @@ import { ExerciseService } from './exercise.service';
   providers: [ExerciseService],
 })
   
-export class ProgramModule {}
+export class ExerciseModule {}
