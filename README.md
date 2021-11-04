@@ -1,1 +1,1 @@
-`g co modules/quiz quiz.controller.ts` - контроллер
+sudo /usr/pgadmin4/bin/setup-web.shquizes
