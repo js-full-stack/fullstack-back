@@ -1,32 +1,42 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn, UpdateDateColumn, BeforeInsert, OneToOne, JoinColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Unique,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
+import { ProgramsAndExercisesEntity } from '../commonTables/programs_exercises.entity';
 
 @Entity('exercise')
-@Unique(["exerciseName"])
-
+@Unique(['exerciseName'])
 export class Exercise extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    exerciseProgramId: number;
+  @Column()
+  exerciseName: string;
 
-    @Column()
-    exerciseName: string;
-  
-    @Column()
-    exerciseDesc: string;  
-             
-    @CreateDateColumn({
-    default: () => 'CURRENT_TIMESTAMP',
+  @Column()
+  exerciseDesc: string;
+
+  @OneToMany(
+    () => ProgramsAndExercisesEntity,
+    (programsAndExercises) => programsAndExercises.exercise,
+  )
+  programsAndExercises: ProgramsAndExercisesEntity[];
+
+  @CreateDateColumn({
     type: 'timestamp',
-    name: 'created_at'
-    })
-    createdAt: Date;
- 
-    @UpdateDateColumn({
-    default: () => 'CURRENT_TIMESTAMP',
+    name: 'created_at',
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
     type: 'timestamp',
-    name: 'updated'
-    })
-    updatedAt: Date;
+    name: 'updated',
+  })
+  updatedAt: Date;
 }
-
-

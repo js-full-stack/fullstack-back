@@ -10,7 +10,7 @@ const VALIDATION_PIPE = new ValidationPipe({
   errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
 });
 
-export const REGEX = {
+export const REGEX =   {
   PASSWORD_RULE,
 };
 
@@ -18,6 +18,6 @@ export const MESSAGES = {
   PASSWORD_RULE_MESSAGE,
 };
 
-export const SETTINGS = {
+export const SETTINGS = {  
   VALIDATION_PIPE,
 };
