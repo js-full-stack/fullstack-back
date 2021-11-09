@@ -1,11 +1,6 @@
-import {
-  IsNotEmpty,
-  Length,
-} from 'class-validator';
+import { IsNotEmpty, Length } from 'class-validator';
 
-
-
-export class AddProgramDto {
+export class addAndUpdateProgramDto {
   @IsNotEmpty()
   @Length(5, 50)
   programName: string;
@@ -13,7 +8,7 @@ export class AddProgramDto {
   @IsNotEmpty()
   @Length(10, 200)
   programDesc: string;
-  
+
   @IsNotEmpty()
   programPrice: number;
 

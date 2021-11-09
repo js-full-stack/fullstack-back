@@ -1,22 +1,40 @@
 
   
 import { Injectable } from '@nestjs/common';
-import { AddProgramDto } from './dto/addProgramDto';
-import { Program } from './program.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { addAndUpdateProgramDto } from './dto/addAndUpdateProgramDto';
+import { ProgramRepo } from './program.repository';
 
 @Injectable()
 export class ProgramService {
-  async addNewProgram(
-    addProgram: AddProgramDto,
-  ): Promise<Program> {
+  constructor(
+    @InjectRepository(ProgramRepo) private programRepo: ProgramRepo,
+  ) {}
 
-    const program = new Program();
+  //* Add new program
+  async addNewProgram(program: addAndUpdateProgramDto) {
+    return await this.programRepo.save(program);
+  }
 
-    program.programName = addProgram.programName;
-    program.programPrice = addProgram.programPrice;
-    program.programDesc = addProgram.programDesc;
-    program.programDuration = addProgram.programDuration;
+  // * Get all programs
+  async getAllPrograms() {
+    return await this.programRepo.find();
+  }
 
-    return await program.save();
+  //* Get program by id
+  async getProgramById(id: number) {
+    return await this.programRepo.findOne(id);
+  }
+
+  // * Update program
+  async updateProgramById(id: number, updatedProgram: addAndUpdateProgramDto) {
+    return await null;
+  }
+
+  //* deleteProgram
+  async deleteProgramById(id: number) {
+    return await this.programRepo.delete(id);
   }
 }
+
+

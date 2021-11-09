@@ -1,28 +1,49 @@
 import {
   Controller,
   Post,
+  Get,
+  Patch,
   Body,
-  HttpCode,
   UsePipes,
   ValidationPipe,
+  ParseIntPipe,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { ProgramService } from './program.service';
-import { AddProgramDto } from './dto/addProgramDto';
-import { Program } from './program.entity'
-
-
+import { addAndUpdateProgramDto } from './dto/addAndUpdateProgramDto';
+import { Program } from './program.entity';
 
 @Controller('program')
-  
 export class ProgramController {
   constructor(private programService: ProgramService) {}
 
-
-  @Post('/add')
-  @HttpCode(201)
+  @Post('/')
   @UsePipes(ValidationPipe)
-  async createUser(@Body() addProgram: AddProgramDto,
-  ): Promise<Program> {
-    return await this.programService.addNewProgram(addProgram)
+  async createProgram(@Body() addProgram: addAndUpdateProgramDto) {
+    return await this.programService.addNewProgram(addProgram);
+  }
+
+  @Get('/')
+  async getAllPrograms() {
+    return await this.programService.getAllPrograms();
+  }
+
+  @Get('/:id')
+  async getProgramById(@Param('id', ParseIntPipe) id: number) {
+    return await this.programService.getProgramById(id);
+  }
+
+  @Patch('/:id')
+  async updateExerciseById(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatedProgram: addAndUpdateProgramDto,
+  ) {
+    return await this.programService.updateProgramById(id, updatedProgram);
+  }
+
+  @Delete('/:id')
+  async removeProgramById(@Param('id', ParseIntPipe) id: number) {
+    return await this.programService.deleteProgramById(id);
   }
 } 

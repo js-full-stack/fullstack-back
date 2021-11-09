@@ -1,11 +1,6 @@
-import {
-  IsNotEmpty,
-  Length,
-} from 'class-validator';
+import { IsNotEmpty, Length } from 'class-validator';
 
-
-
-export class AddExerciseDto {
+export class AddAndUpdateExerciseDto {
   @IsNotEmpty()
   @Length(5, 50)
   exerciseName: string;
