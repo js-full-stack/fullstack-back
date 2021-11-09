@@ -9,6 +9,7 @@ import {
   BeforeInsert,
   OneToMany,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from './roles.entity';
@@ -41,7 +42,8 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Role, (role) => role.role)
+  @JoinColumn()
+  @ManyToOne(() => Role, (role) => role.id)
   role: Role;
 
   @OneToMany(

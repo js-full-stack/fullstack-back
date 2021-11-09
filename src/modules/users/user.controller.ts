@@ -39,6 +39,6 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number, user: UserRegisterDto
     // user: UserRegisterDto,
   ) {
-    return await this.userService.updateUserProfile(id);
+    // return await this.userService.updateUserProfile(id);
   }
 } 

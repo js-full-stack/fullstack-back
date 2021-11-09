@@ -33,9 +33,8 @@ export class Program extends BaseEntity {
   @Column()
   programPrice: number;
 
-  @ManyToOne(() => User, (user) => user.id)
-  @JoinColumn()
-  user: User;
+  // @ManyToOne(() => User, (user) => user.id)
+  // user: User;
 
   @OneToMany(
     () => ProgramsAndExercisesEntity,
