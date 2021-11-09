@@ -23,5 +23,6 @@ export class UserRegisterDto {
   password: string;
 
   @IsNotEmpty()
+  @IsIn(['couch', 'athlete'])
   role: string;
 }

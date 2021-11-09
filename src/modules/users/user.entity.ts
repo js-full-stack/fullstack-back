@@ -7,7 +7,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
-  JoinColumn,
   OneToMany,
   ManyToOne,
 } from 'typeorm';
@@ -42,8 +41,8 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // @ManyToOne(() => Role, (role) => role.id)
-  // role: Role;
+  @ManyToOne(() => Role, (role) => role.role)
+  role: Role;
 
   @OneToMany(
     () => UsersAndProgramsEntity,

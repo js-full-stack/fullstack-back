@@ -4,14 +4,18 @@ import {
   PrimaryGeneratedColumn,
   Column,
   PrimaryColumn,
+  OneToMany,
 } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity()
 export class Role extends BaseEntity {
-  @PrimaryColumn()
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   role: string;
+
+  // @OneToMany(() => User, (user) => user.role, { cascade: true })
+  // user: User[];
 }
