@@ -4,7 +4,7 @@ import { Program } from '../programs/program.entity';
 
 @Entity()
 export class ProgramsAndExercisesEntity {
-  @ManyToOne(() => Exercise, (exercise) => exercise, { primary: true })
+  @ManyToOne(() => Exercise, (exercise) => exercise.id, { primary: true })
   exercise: Exercise;
 
   @ManyToOne(() => Program, (program) => program.id, { primary: true })

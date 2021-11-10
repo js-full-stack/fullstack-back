@@ -1,9 +1,9 @@
-
-  
-import { Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { UserRegisterDto } from './dto/UserRegisterDto';
+import { UserUpdateDto } from './dto/UserUpdateDto';
 import { Role } from './roles.entity';
 import { User } from './user.entity';
 import { UserRepo } from './user.repository';
@@ -12,41 +12,30 @@ import { UserRepo } from './user.repository';
 export class UserService {
   constructor(@InjectRepository(UserRepo) private userRepo: UserRepo) {}
 
-  async doUserRegistration(userRegister: UserRegisterDto) {
-    const user = new User();
-    const role = new Role();
-
-    role.role = userRegister.role;
-
-    user.role = role;
-
-    user.firstName = userRegister.firstName;
-    user.lastName = userRegister.lastName;
-    user.email = userRegister.email;
-    user.password = userRegister.password;
-    user.phone = userRegister.phone;
-
-    await role.save();
-    return await user.save();
-  }
-
+  // GET ALL USERS
   async getAllUsers() {
     return await this.userRepo.find({ relations: ['role'] });
   }
 
+  // GET USER BY ID
   async getUserById(id: number) {
     return await this.userRepo.findOne({ where: { id }, relations: ['role'] });
   }
 
-  async updateUserProfile(id: number, userRegister: UserRegisterDto) {
-    const userProfile = await this.userRepo.findOne(id);
+  // GET USER BY EMAIL
+  async getUserByEmail(email: string) {
+    return await this.userRepo.findOne({ email });
+  }
 
-    userProfile.firstName = userRegister.firstName;
-    userProfile.lastName = userRegister.lastName;
-    userProfile.email = userRegister.email;
-    userProfile.password = userRegister.password;
-    userProfile.phone = userRegister.phone;
+  // UPDATE USER
+  async updateUserProfile(id: number, user: UserUpdateDto) {
+    await this.userRepo.update(id, user);
 
-    await userProfile.save();
+    const updatedUserProfile = await this.userRepo.findOne({
+      where: { id },
+      relations: ['role'],
+    });
+
+    return updatedUserProfile;
   }
 }

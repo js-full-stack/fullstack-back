@@ -11,8 +11,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   database: 'conduit',
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   synchronize: true,
-  logging: true, 
-  logger: "advanced-console"
+  logging: true,
 };
 
 

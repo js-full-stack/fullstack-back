@@ -14,6 +14,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { Role } from './roles.entity';
 import { UsersAndProgramsEntity } from '../commonTables/users_programs.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('users')
 @Unique(['email'])
@@ -33,6 +34,7 @@ export class User extends BaseEntity {
   @Column()
   phone: string;
 
+  // @Exclude()
   @Column()
   password: string;
 
@@ -43,7 +45,7 @@ export class User extends BaseEntity {
   updatedAt: Date;
 
   @JoinColumn()
-  @ManyToOne(() => Role, (role) => role.id)
+  @ManyToOne(() => Role, (role) => role.role)
   role: Role;
 
   @OneToMany(
@@ -53,8 +55,8 @@ export class User extends BaseEntity {
   usersAndPrograms: UsersAndProgramsEntity[];
 
   @BeforeInsert()
-  async setPassword(password: string) {
-    const salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(password || this.password, salt);
+  async setPassword() {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
   }
 }

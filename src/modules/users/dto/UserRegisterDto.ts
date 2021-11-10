@@ -19,7 +19,7 @@ export class UserRegisterDto {
 
   @IsNotEmpty()
   @Length(5, 25)
-  @Matches(REGEX.PASSWORD_RULE, { message: MESSAGES.PASSWORD_RULE_MESSAGE })
+  // @Matches(REGEX.PASSWORD_RULE, { message: MESSAGES.PASSWORD_RULE_MESSAGE })
   password: string;
 
   @IsNotEmpty()

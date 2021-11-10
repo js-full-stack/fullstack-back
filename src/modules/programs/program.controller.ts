@@ -2,13 +2,13 @@ import {
   Controller,
   Post,
   Get,
-  Patch,
   Body,
   UsePipes,
   ValidationPipe,
   ParseIntPipe,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ProgramService } from './program.service';
 import { addAndUpdateProgramDto } from './dto/addAndUpdateProgramDto';
@@ -34,12 +34,12 @@ export class ProgramController {
     return await this.programService.getProgramById(id);
   }
 
-  @Patch('/:id')
-  async updateExerciseById(
+  @Put('/:id')
+  async updateProgram(
     @Param('id', ParseIntPipe) id: number,
     @Body() updatedProgram: addAndUpdateProgramDto,
   ) {
-    return await this.programService.updateProgramById(id, updatedProgram);
+    return await this.programService.updateProgram(id, updatedProgram);
   }
 
   @Delete('/:id')

@@ -21,3 +21,8 @@ export const MESSAGES = {
 export const SETTINGS = {
   VALIDATION_PIPE,
 };
+
+
+export enum PostgresErrorCode {
+  UniqueViolation = '23505',
+}

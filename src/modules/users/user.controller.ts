@@ -5,24 +5,20 @@ import {
   UsePipes,
   ValidationPipe,
   Get,
-  Patch,
   Param,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserRegisterDto } from './dto/UserRegisterDto';
 import { SETTINGS } from 'src/app.utils';
 import { User } from './user.entity';
+import { UserUpdateDto } from './dto/UserUpdateDto';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post('/')
-  @UsePipes(ValidationPipe)
-  async createUser(@Body(SETTINGS.VALIDATION_PIPE) user: UserRegisterDto) {
-    return await this.userService.doUserRegistration(user);
-  }
 
   @Get('/')
   async getAllUsers() {
@@ -34,11 +30,11 @@ export class UserController {
     return await this.userService.getUserById(id);
   }
 
-  @Patch('/:id')
+  @Put('/:id')
   async updateUserProfile(
-    @Param('id', ParseIntPipe) id: number, user: UserRegisterDto
-    // user: UserRegisterDto,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() user: UserUpdateDto,
   ) {
-    // return await this.userService.updateUserProfile(id);
+    return await this.userService.updateUserProfile(id, user);
   }
 } 

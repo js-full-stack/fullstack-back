@@ -11,27 +11,30 @@ export class ProgramService {
     @InjectRepository(ProgramRepo) private programRepo: ProgramRepo,
   ) {}
 
-  //* Add new program
+  // ADD NEW PROGRAM
   async addNewProgram(program: addAndUpdateProgramDto) {
     return await this.programRepo.save(program);
   }
 
-  // * Get all programs
+  // GET ALL PROGRAMS
   async getAllPrograms() {
     return await this.programRepo.find();
   }
 
-  //* Get program by id
+  // GET PROGRAM BY ID
   async getProgramById(id: number) {
     return await this.programRepo.findOne(id);
   }
 
-  // * Update program
-  async updateProgramById(id: number, updatedProgram: addAndUpdateProgramDto) {
-    return await null;
+  // UPDATE PROGRAM
+  async updateProgram(id: number, updatedProgram: addAndUpdateProgramDto) {
+    const program = await this.programRepo.findOne({
+      where: { id },
+    });
+    return program;
   }
 
-  //* deleteProgram
+  // DELETE PROGRAM
   async deleteProgramById(id: number) {
     return await this.programRepo.delete(id);
   }
