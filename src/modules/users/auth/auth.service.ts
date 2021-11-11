@@ -1,10 +1,11 @@
 import * as bcrypt from 'bcrypt';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
 import { UserRepo } from '../user.repository';
 import { UserRegisterDto } from '../dto/UserRegisterDto';
 import { User } from '../user.entity';
-import { Role } from '../roles.entity';
+import { Role } from '../roles/roles.entity';
 import { PostgresErrorCode } from 'src/app.utils';
 import { UserService } from '../user.service';
 import { UserAuthDto } from '../dto/UserAuthDto';
@@ -13,6 +14,7 @@ export class AuthService {
   constructor(
     @InjectRepository(UserRepo) private userRepo: UserRepo,
     private userService: UserService,
+    private jwtService: JwtService,
   ) {}
 
   // REGISTRATION
@@ -45,17 +47,10 @@ export class AuthService {
   }
 
   // AUTHENTICATED
-  async doUserAuthenticated(userData: UserAuthDto) {
+  async validateUser(email: string, password: string) {
     try {
-      const user = await this.userService.getUserByEmail(userData.email);
-      if (!user) {
-        return new HttpException(
-          'Wrong credentials provided',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-
-      await bcrypt.compare(userData.password, user.password);
+      const user = await this.userService.getUserByEmail(email);
+      await this.validatePassword(password, user.password);
       return user;
     } catch (error) {
       return new HttpException(
@@ -64,4 +59,22 @@ export class AuthService {
       );
     }
   }
+
+  async validatePassword(password: string, hashedPassword: string) {
+    const isMatch = await bcrypt.compare(password, hashedPassword);
+    if (!isMatch) {
+      throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST);
+    }
+  }
+  async login(user: User) {
+    const payload = {
+      email: user.email,
+      sub: user.id,
+    };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
 }
+
+

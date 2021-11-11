@@ -1,7 +1,4 @@
-import { IsEmail, IsIn, IsNotEmpty, Length, Matches } from 'class-validator';
-
-import { MESSAGES, REGEX } from '../../../app.utils';
-import { Role } from '../roles.entity';
+import { IsNotEmpty } from 'class-validator';
 
 export class UserAuthDto {
   @IsNotEmpty()

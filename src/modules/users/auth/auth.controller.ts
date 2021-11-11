@@ -5,26 +5,40 @@ import {
   UsePipes,
   ValidationPipe,
   HttpCode,
+  UseGuards,
+  Request,
+  Req,
+  ConsoleLogger,
+  Get,
 } from '@nestjs/common';
 import { SETTINGS } from 'src/app.utils';
 import { UserAuthDto } from '../dto/UserAuthDto';
 import { UserRegisterDto } from '../dto/UserRegisterDto';
 import { AuthService } from './auth.service';
-
-@Controller('auth')
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import RequestWithUser from './requestWithUser.interface';
+Request;
+@Controller('')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('/register')
+  @Post('auth/register')
   @UsePipes(ValidationPipe)
   async createUser(@Body(SETTINGS.VALIDATION_PIPE) user: UserRegisterDto) {
     return await this.authService.doUserRegistration(user);
   }
 
-  @Post('/login')
+  @UseGuards(LocalAuthGuard)
   @HttpCode(200)
-  async authUser(@Body() userData: UserAuthDto) {
-    console.log(userData);
-    return await this.authService.doUserAuthenticated(userData);
+  @Post('auth/login')
+  async authUser(@Request() req) {
+    return this.authService.login(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/profile')
+  getProfile(@Request() req) {
+    return req.user;
   }
 }

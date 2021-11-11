@@ -10,11 +10,14 @@ import {
   OneToMany,
   ManyToOne,
   JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Role } from './roles.entity';
-import { UsersAndProgramsEntity } from '../commonTables/users_programs.entity';
+import { Role } from './roles/roles.entity';
+import { UsersProgramsEntity } from '../commonTables/usersPrograms.entity';
 import { Exclude } from 'class-transformer';
+import { Program } from '../programs/program.entity';
 
 @Entity('users')
 @Unique(['email'])
@@ -44,15 +47,18 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @JoinColumn()
-  @ManyToOne(() => Role, (role) => role.role)
+  @JoinColumn({ name: 'role' })
+  @ManyToOne(() => Role, ({ role }) => role)
   role: Role;
 
+  // @ManyToMany(() => Program)
+  // programs: Program[];
+
   @OneToMany(
-    () => UsersAndProgramsEntity,
-    (usersAndPrograms) => usersAndPrograms.user,
+    () => UsersProgramsEntity,
+    (usersProgram: UsersProgramsEntity) => usersProgram.user,
   )
-  usersAndPrograms: UsersAndProgramsEntity[];
+  usersProgram: UsersProgramsEntity[];
 
   @BeforeInsert()
   async setPassword() {

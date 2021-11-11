@@ -12,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { ProgramService } from './program.service';
 import { addAndUpdateProgramDto } from './dto/addAndUpdateProgramDto';
-import { Program } from './program.entity';
 
 @Controller('program')
 export class ProgramController {

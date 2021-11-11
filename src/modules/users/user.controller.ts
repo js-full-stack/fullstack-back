@@ -1,18 +1,12 @@
 import {
   Controller,
-  Post,
   Body,
-  UsePipes,
-  ValidationPipe,
   Get,
   Param,
   ParseIntPipe,
   Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserRegisterDto } from './dto/UserRegisterDto';
-import { SETTINGS } from 'src/app.utils';
-import { User } from './user.entity';
 import { UserUpdateDto } from './dto/UserUpdateDto';
 
 @Controller('user')

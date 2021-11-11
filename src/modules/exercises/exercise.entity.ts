@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { ProgramsAndExercisesEntity } from '../commonTables/programs_exercises.entity';
+import { ProgramsAndExercisesEntity } from '../commonTables/programsExercises.entity';
 
 @Entity('exercise')
 @Unique(['exerciseName'])
