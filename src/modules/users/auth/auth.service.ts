@@ -2,41 +2,34 @@ import * as bcrypt from 'bcrypt';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { UserRepo } from '../user.repository';
 import { UserRegisterDto } from '../dto/UserRegisterDto';
 import { User } from '../user.entity';
-import { Role } from '../roles/roles.entity';
+import { Role } from '../roles.entity';
 import { PostgresErrorCode } from 'src/app.utils';
 import { UserService } from '../user.service';
-import { UserAuthDto } from '../dto/UserAuthDto';
+import { Connection, Repository } from 'typeorm';
 
 export class AuthService {
   constructor(
-    @InjectRepository(UserRepo) private userRepo: UserRepo,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private userService: UserService,
     private jwtService: JwtService,
+    private connection: Connection,
   ) {}
 
   // REGISTRATION
-  async doUserRegistration(userRegister: UserRegisterDto) {
+  async doUserRegistration(user: UserRegisterDto) {
     try {
-      const user = new User();
       const role = new Role();
+      role.role = user.role;
+      await this.connection.manager.save(role);
 
-      role.role = userRegister.role;
-      user.role = role;
-      user.firstName = userRegister.firstName;
-      user.lastName = userRegister.lastName;
-      user.email = userRegister.email;
-      user.password = userRegister.password;
-      user.phone = userRegister.phone;
-
-      await role.save();
-      return await user.save();
+      return await this.userRepository.save({ ...user, role });
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation)
         return new HttpException(
-          'User with this email alredy exist',
+          `User with this email alredy exist`,
           HttpStatus.BAD_REQUEST,
         );
     }
@@ -76,5 +69,4 @@ export class AuthService {
     };
   }
 }
-
 

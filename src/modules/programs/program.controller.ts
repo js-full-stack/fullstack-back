@@ -9,18 +9,25 @@ import {
   Param,
   Delete,
   Put,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ProgramService } from './program.service';
-import { addAndUpdateProgramDto } from './dto/addAndUpdateProgramDto';
-
+import { createProgramDto } from './dto/createProgramDto';
+import { JwtAuthGuard } from '../users/auth/guards/jwt-auth.guard';
+import RequestWithUser from '../users/auth/requestWithUser.interface';
 @Controller('program')
 export class ProgramController {
   constructor(private programService: ProgramService) {}
 
   @Post('/')
+  @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
-  async createProgram(@Body() addProgram: addAndUpdateProgramDto) {
-    return await this.programService.addNewProgram(addProgram);
+  async createProgram(
+    @Body() newProgram: createProgramDto,
+    @Request() req: RequestWithUser,
+  ) {
+    return await this.programService.addNewProgram(newProgram, req.user);
   }
 
   @Get('/')
@@ -36,7 +43,7 @@ export class ProgramController {
   @Put('/:id')
   async updateProgram(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updatedProgram: addAndUpdateProgramDto,
+    @Body() updatedProgram: createProgramDto,
   ) {
     return await this.programService.updateProgram(id, updatedProgram);
   }
@@ -46,3 +53,4 @@ export class ProgramController {
     return await this.programService.deleteProgramById(id);
   }
 } 
+ 

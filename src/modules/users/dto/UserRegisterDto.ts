@@ -1,7 +1,6 @@
 import { IsEmail, IsIn, IsNotEmpty, Length, Matches } from 'class-validator';
 
 import { MESSAGES, REGEX } from '../../../app.utils';
-import { Role } from '../roles/roles.entity';
 
 export class UserRegisterDto {
   @IsNotEmpty()
@@ -10,7 +9,6 @@ export class UserRegisterDto {
   @IsNotEmpty()
   lastName: string;
 
-  @IsNotEmpty({ message: 'The user should have a email' })
   @IsEmail()
   email: string;
 
@@ -22,7 +20,6 @@ export class UserRegisterDto {
   // @Matches(REGEX.PASSWORD_RULE, { message: MESSAGES.PASSWORD_RULE_MESSAGE })
   password: string;
 
-  @IsNotEmpty()
   @IsIn(['couch', 'athlete'])
   role: string;
 }

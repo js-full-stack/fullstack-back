@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { ProgramsAndExercisesEntity } from '../commonTables/programsExercises.entity';
+// import { ProgramsAndExercisesEntity } from '../commonTables/programsExercises.entity';
 
 @Entity('exercise')
 @Unique(['exerciseName'])
@@ -22,11 +22,11 @@ export class Exercise extends BaseEntity {
   @Column()
   exerciseDesc: string;
 
-  @OneToMany(
-    () => ProgramsAndExercisesEntity,
-    (programsAndExercises) => programsAndExercises.exercise,
-  )
-  programsAndExercises: ProgramsAndExercisesEntity[];
+  // @OneToMany(
+  //   () => ProgramsAndExercisesEntity,
+  //   (programsAndExercises) => programsAndExercises.exercise,
+  // )
+  // programsAndExercises: ProgramsAndExercisesEntity[];
 
   @CreateDateColumn({
     type: 'timestamp',

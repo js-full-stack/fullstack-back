@@ -27,12 +27,8 @@ export enum PostgresErrorCode {
   UniqueViolation = '23505',
 }
 
-export const jwtSecret = 'mySuperSecretKey';
+export const JWT_SECRET = 'mySuperSecretKey';
 
-// export enum usersRoles {
-//   Couch = 'couch',
-//   Athlete = 'athlete',
-// }
 
 export enum Action {
   Manage = 'manage',

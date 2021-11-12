@@ -7,13 +7,11 @@ import {
   HttpCode,
   UseGuards,
   Request,
-  Req,
-  ConsoleLogger,
   Get,
 } from '@nestjs/common';
 import { SETTINGS } from 'src/app.utils';
-import { UserAuthDto } from '../dto/UserAuthDto';
 import { UserRegisterDto } from '../dto/UserRegisterDto';
+import { Role } from '../roles.entity';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -25,20 +23,24 @@ export class AuthController {
 
   @Post('auth/register')
   @UsePipes(ValidationPipe)
-  async createUser(@Body(SETTINGS.VALIDATION_PIPE) user: UserRegisterDto) {
+  async createUser(
+    @Body(SETTINGS.VALIDATION_PIPE) user: UserRegisterDto,
+    role: Role,
+  ) {
     return await this.authService.doUserRegistration(user);
   }
 
   @UseGuards(LocalAuthGuard)
   @HttpCode(200)
   @Post('auth/login')
-  async authUser(@Request() req) {
+  async authUser(@Request() req: RequestWithUser) {
     return this.authService.login(req.user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
-  getProfile(@Request() req) {
+  getProfile(@Request() req: RequestWithUser) {
+    console.log(req.user);
     return req.user;
   }
 }

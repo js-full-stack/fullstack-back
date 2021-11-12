@@ -9,12 +9,9 @@ import {
   JoinColumn,
   OneToMany,
   ManyToOne,
-  ManyToMany,
   JoinTable,
 } from 'typeorm';
 
-import { ProgramsAndExercisesEntity } from '../commonTables/programsExercises.entity';
-import { UsersProgramsEntity } from '../commonTables/usersPrograms.entity';
 import { User } from '../users/user.entity';
 
 @Entity('program')
@@ -35,21 +32,16 @@ export class Program extends BaseEntity {
   @Column()
   programPrice: number;
 
-  @OneToMany(
-    () => ProgramsAndExercisesEntity,
-    (programsAndExercises) => programsAndExercises.program,
-  )
-  programsAndExercises: ProgramsAndExercisesEntity[];
-
-  @OneToMany(
-    () => UsersProgramsEntity,
-    (usersProgram: UsersProgramsEntity) => usersProgram.program,
-  )
-  UsersProgramsEntity: UsersProgramsEntity[];
-
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @JoinColumn({ name: 'author' })
+  @ManyToOne(() => User, (author) => author.programs)
+  author: User;
 }
+
+
+
