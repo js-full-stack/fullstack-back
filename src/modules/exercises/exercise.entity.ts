@@ -3,40 +3,34 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  Unique,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
-// import { ProgramsAndExercisesEntity } from '../commonTables/programsExercises.entity';
+import { Program } from '../programs/program.entity';
 
 @Entity('exercise')
-@Unique(['exerciseName'])
 export class Exercise extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  exerciseName: string;
+  name: string;
 
   @Column()
-  exerciseDesc: string;
+  description: string;
 
-  // @OneToMany(
-  //   () => ProgramsAndExercisesEntity,
-  //   (programsAndExercises) => programsAndExercises.exercise,
-  // )
-  // programsAndExercises: ProgramsAndExercisesEntity[];
-
-  @CreateDateColumn({
-    type: 'timestamp',
-    name: 'created_at',
-  })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({
-    type: 'timestamp',
-    name: 'updated',
-  })
+  @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToMany(() => Program, (program) => program.exercises, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinTable({ name: 'exercises_for_programs' })
+  programs: Program[];
 }

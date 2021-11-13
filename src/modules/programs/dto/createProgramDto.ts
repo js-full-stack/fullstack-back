@@ -5,18 +5,18 @@ export class createProgramDto {
   @IsNotEmpty()
   @IsString()
   @Length(5, 50)
-  programName: string;
+  name: string;
 
   @IsNotEmpty()
   @IsString()
   @Length(10, 200)
-  programDesc: string;
+  description: string;
 
   @IsNotEmpty()
   @IsNumber()
-  programPrice: number;
+  price: number;
 
   @IsNotEmpty()
   @IsNumber()
-  programDuration: number;
+  duration: number;
 }

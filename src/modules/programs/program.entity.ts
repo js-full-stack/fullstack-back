@@ -3,34 +3,33 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  Unique,
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
-  OneToMany,
   ManyToOne,
   JoinTable,
+  ManyToMany,
 } from 'typeorm';
+import { Exercise } from '../exercises/exercise.entity';
 
 import { User } from '../users/user.entity';
 
 @Entity('program')
-@Unique(['programName'])
 export class Program extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  programName: string;
+  @Column({ unique: true })
+  name: string;
 
   @Column()
-  programDesc: string;
+  description: string;
 
   @Column()
-  programDuration: number;
+  duration: number;
 
   @Column()
-  programPrice: number;
+  price: number;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -38,10 +37,15 @@ export class Program extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @ManyToOne(() => User, (author) => author.id, {
+    eager: true,
+  })
   @JoinColumn({ name: 'author' })
-  @ManyToOne(() => User, (author) => author.programs)
   author: User;
+
+  @ManyToMany(() => Exercise, (exercise) => exercise.programs)
+  exercises: Exercise[];
 }
 
-
+ 
 

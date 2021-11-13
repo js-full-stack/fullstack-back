@@ -2,8 +2,8 @@ import * as bcrypt from 'bcrypt';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
-import { UserRegisterDto } from './dto/UserRegisterDto';
-import { UserUpdateDto } from './dto/UserUpdateDto';
+import { UserRegisterDto } from './dto/userRegisterDto';
+import { UserUpdateDto } from './dto/userUpdateDto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class UserService {
 
   // GET ALL USERS
   async getAllUsers() {
-    return await this.userRepository.find({ relations: ['role'] });
+    return await this.userRepository.find();
   }
 
   // GET USER BY ID
@@ -33,12 +33,6 @@ export class UserService {
   // UPDATE USER
   async updateUserProfile(id: number, user: UserUpdateDto) {
     await this.userRepository.update(id, user);
-
-    const updatedUserProfile = await this.userRepository.findOne({
-      where: { id },
-      relations: ['role'],
-    });
-
-    return updatedUserProfile;
+    return await this.getUserById(id);
   }
 }

@@ -2,53 +2,56 @@
   
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Connection, Repository } from 'typeorm';
+import { Program } from '../programs/program.entity';
 
-import { AddAndUpdateExerciseDto } from './dto/addExerciseDto';
+import { addExerciseDto } from './dto/addExerciseDto';
+import { UpdateExerciseDto } from './dto/updateExerciseDto';
 import { Exercise } from './exercise.entity';
-import { ExerciseRepo } from './exercise.repository';
 
 @Injectable()
 export class ExerciseService {
   constructor(
-    @InjectRepository(ExerciseRepo)
-    private exerciseRepo: ExerciseRepo,
+    @InjectRepository(Exercise)
+    private exerciseRepository: Repository<Exercise>,
+    private connection: Connection,
   ) {}
 
-  async addNewExercise(exercise: AddAndUpdateExerciseDto) {
-    return await this.exerciseRepo.save(exercise);
+  // CREATE EXERCISE
+  async createExercise(exercise: addExerciseDto) {
+    const newExercise = new Exercise();
+    const program = new Program();
+
+    // program.exercises = [exercise.exercises]
+    newExercise.name = exercise.name;
+    newExercise.description = exercise.description;
+    // newExercise.programs = program
+
+    return await this.connection.manager.save(newExercise);
+
+    // const newExercise = this.exerciseRepository.create(exercise);
+    // return await this.exerciseRepository.save(newExercise);
   }
 
-  //* Get all exercises
-  async getAllExercises(): Promise<Exercise[]> {
-    return null;
+  // GET ALL EXERCISES
+  async getAllExercises() {
+    return await this.exerciseRepository.find();
   }
 
-  //* Get exercise by id
-  async getExerciseById(id: number): Promise<Exercise> {
-    return await this.exerciseRepo.findOne(id, {
-      relations: [],
-    });
+  // GET EXERCISE BY ID
+  async getExerciseById(id: number) {
+    return await this.exerciseRepository.findOne(id);
   }
 
-  //* Update program
-  async updateExerciseById(
-    id: number,
-    updateExercise: AddAndUpdateExerciseDto,
-  ): Promise<Exercise> {
-    return null;
+  // UPDATE EXERCISE
+  async updateExerciseById(id: number, exercise: UpdateExerciseDto) {
+    await this.exerciseRepository.update(id, exercise);
+    return await this.getExerciseById(id);
   }
 
-  //* deleteProgram
-  async deleteExerciseById(id: number): Promise<Exercise> {
-    return null;
+  // DELETE EXERCISE
+  async deleteExerciseById(id: number) {
+    return await this.exerciseRepository.delete(id);
   }
 }
 
-
-// import {getConnection} from "typeorm";
-// await getConnection()
-//     .createQueryBuilder()
-//     .update(User)
-//     .set({ firstName: "Timber", lastName: "Saw" })
-//     .where("id = :id", { id: 1 })
-//     .execute();

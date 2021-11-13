@@ -2,11 +2,11 @@ import * as bcrypt from 'bcrypt';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { UserRegisterDto } from '../dto/UserRegisterDto';
-import { User } from '../user.entity';
-import { Role } from '../roles.entity';
-import { PostgresErrorCode } from 'src/app.utils';
-import { UserService } from '../user.service';
+import { UserRegisterDto } from '../users/dto/userRegisterDto';
+import { User } from '../users/user.entity';
+import { Role } from '../users/roles.entity';
+import { PostgresErrorCode } from 'src/utils/constants';
+import { UserService } from '../users/user.service';
 import { Connection, Repository } from 'typeorm';
 
 export class AuthService {
@@ -19,14 +19,13 @@ export class AuthService {
   ) {}
 
   // REGISTRATION
-  async doUserRegistration(user: UserRegisterDto) {
+  async registration(user: UserRegisterDto) {
     try {
       const role = new Role();
       role.role = user.role;
-      await this.connection.manager.save(role)
       const newUser = new User();
 
-      newUser.firstName = user.firstName; 
+      newUser.firstName = user.firstName;
       newUser.lastName = user.lastName;
       newUser.phone = user.phone;
       newUser.email = user.email;
@@ -34,8 +33,6 @@ export class AuthService {
       newUser.role = role;
 
       return await this.connection.manager.save(newUser);
-
-     
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation)
         return new HttpException(
@@ -47,6 +44,16 @@ export class AuthService {
       'Something went wrong',
       HttpStatus.INTERNAL_SERVER_ERROR,
     );
+  }
+
+  // LOGIN
+  async login(user: User) {
+    const payload = {
+      sub: user.id,
+    };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 
   // AUTHENTICATED
@@ -69,14 +76,4 @@ export class AuthService {
       throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST);
     }
   }
-  async login(user: User) {
-    const payload = {
-      sub: user.id,
-      email: user.email
-    };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
-  }
 }
-

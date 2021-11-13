@@ -12,6 +12,7 @@ import {
   JoinColumn,
   ManyToMany,
   JoinTable,
+  BeforeUpdate,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from './roles.entity';
@@ -20,7 +21,6 @@ import { Exclude } from 'class-transformer';
 import { Program } from '../programs/program.entity';
 
 @Entity('users')
-@Unique(['email'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -31,7 +31,7 @@ export class User extends BaseEntity {
   @Column()
   lastName: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -47,16 +47,15 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Program, (program) => program.author)
-  programs: Program[];
-
-  @ManyToOne(() => Role, (role) => role.id, { eager: true })
+  @ManyToOne(() => Role, (role) => role.id, {
+    cascade: true,
+    eager: true,
+  })
   @JoinColumn({ name: 'role' })
   role: Role;
 
-  // @ManyToMany(() => Program, (program: Program) => program.author)
-  // programs: Program[];
   @BeforeInsert()
+  @BeforeUpdate()
   async setPassword() {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);

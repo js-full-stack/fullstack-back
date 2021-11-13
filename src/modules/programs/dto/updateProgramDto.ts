@@ -11,21 +11,21 @@ export class updateProgramDto {
   @IsString()
   @Length(5, 50)
   @IsOptional()
-  programName: string;
+  name: string;
 
   @IsNotEmpty()
   @IsString()
   @IsOptional()
   @Length(10, 200)
-  programDesc: string;
+  description: string;
 
   @IsNotEmpty()
   @IsNumber()
   @IsOptional()
-  programPrice: number;
+  price: number;
 
   @IsNotEmpty()
   @IsNumber()
   @IsOptional()
-  programDuration: number;
+  duration: number;
 }

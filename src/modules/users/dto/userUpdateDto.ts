@@ -9,7 +9,7 @@ import {
 
 import * as bcrypt from 'bcrypt';
 
-import { MESSAGES, REGEX } from '../../../app.utils';
+import { MESSAGES, REGEX } from '../../../utils/constants';
 import { BeforeInsert } from 'typeorm';
 
 export class UserUpdateDto {
