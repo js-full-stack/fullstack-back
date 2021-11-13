@@ -54,8 +54,6 @@ export class User extends BaseEntity {
   @JoinColumn({ name: 'role' })
   role: Role;
 
-  // usersProgram: UsersProgramsEntity[];
-
   // @ManyToMany(() => Program, (program: Program) => program.author)
   // programs: Program[];
   @BeforeInsert()

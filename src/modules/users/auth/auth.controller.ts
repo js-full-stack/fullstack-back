@@ -23,10 +23,7 @@ export class AuthController {
 
   @Post('auth/register')
   @UsePipes(ValidationPipe)
-  async createUser(
-    @Body(SETTINGS.VALIDATION_PIPE) user: UserRegisterDto,
-    role: Role,
-  ) {
+  async createUser(@Body(SETTINGS.VALIDATION_PIPE) user: UserRegisterDto) {
     return await this.authService.doUserRegistration(user);
   }
 

@@ -23,9 +23,19 @@ export class AuthService {
     try {
       const role = new Role();
       role.role = user.role;
-      await this.connection.manager.save(role);
+      await this.connection.manager.save(role)
+      const newUser = new User();
 
-      return await this.userRepository.save({ ...user, role });
+      newUser.firstName = user.firstName; 
+      newUser.lastName = user.lastName;
+      newUser.phone = user.phone;
+      newUser.email = user.email;
+      newUser.password = user.password;
+      newUser.role = role;
+
+      return await this.connection.manager.save(newUser);
+
+     
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation)
         return new HttpException(
@@ -61,8 +71,8 @@ export class AuthService {
   }
   async login(user: User) {
     const payload = {
-      email: user.email,
       sub: user.id,
+      email: user.email
     };
     return {
       access_token: this.jwtService.sign(payload),
