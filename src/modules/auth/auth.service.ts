@@ -48,7 +48,7 @@ export class AuthService {
   // LOGIN
   async login(user: User) {
     const payload = {
-      sub: user.id,
+      id: user.id,
     };
     return {
       access_token: this.jwtService.sign(payload),
@@ -59,6 +59,7 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     try {
       const user = await this.userService.getUserByEmail(email);
+
       await this.validatePassword(password, user.password);
       return user;
     } catch (error) {
@@ -72,7 +73,10 @@ export class AuthService {
   async validatePassword(password: string, hashedPassword: string) {
     const isMatch = await bcrypt.compare(password, hashedPassword);
     if (!isMatch) {
-      throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Wrong credentials provided',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

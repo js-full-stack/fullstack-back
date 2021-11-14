@@ -26,9 +26,8 @@ export class ProgramController {
 
   // ADD NEW PROGRAM
   @Post('/')
-  @UseGuards(JwtAuthGuard)
   @Roles(Role.COUCH)
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @UsePipes(ValidationPipe)
   async createProgram(
     @Body() newProgram: createProgramDto,

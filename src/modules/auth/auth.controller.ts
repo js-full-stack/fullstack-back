@@ -29,14 +29,14 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @HttpCode(200)
   @Post('auth/login')
-  async authUser(@Request() req: RequestWithUser) {
+  async authUser(@Request() req) {
     return this.authService.login(req.user);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get('/profile')
-  // getProfile(@Request() req: RequestWithUser) {
-  //   console.log(req.user);
-  //   return req.user;
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Get('/profile')
+  getProfile(@Request() req) {
+    console.log(req.user);
+    return req.user;
+  }
 }
