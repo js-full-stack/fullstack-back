@@ -17,7 +17,6 @@ import { addExerciseDto } from './dto/addExerciseDto';
 import { Exercise } from './exercise.entity';
 import { UpdateExerciseDto } from './dto/updateExerciseDto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import RequestWithUser from '../auth/requestWithUser.interface';
 import { Program } from '../programs/program.entity';
 
 @Controller('exercise')

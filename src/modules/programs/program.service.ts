@@ -3,7 +3,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostgresErrorCode } from 'src/utils/constants';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { Exercise } from '../exercises/exercise.entity';
 import { User } from '../users/user.entity';
 import { createProgramDto } from './dto/createProgramDto';
@@ -31,7 +31,7 @@ export class ProgramService {
       newProgram.price = program.price;
       newProgram.duration = program.duration;
 
-      return this.programRepository.create({
+      return this.programRepository.save({
         ...newProgram,
         author,
       });

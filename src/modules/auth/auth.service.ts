@@ -12,7 +12,6 @@ import { Connection, Repository } from 'typeorm';
 export class AuthService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>,
     private userService: UserService,
     private jwtService: JwtService,
     private connection: Connection,

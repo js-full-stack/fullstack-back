@@ -29,15 +29,8 @@ export enum PostgresErrorCode {
 
 export const JWT_SECRET = 'SECRET';
 
-export enum Action {
-  Manage = 'manage',
-  Create = 'create',
-  Read = 'read',
-  Update = 'update',
-  Delete = 'delete',
-}
 
-export enum userRoles {
-  Couch = 'couch',
-  Athlete = 'athlete',
+export enum Role {
+  COUCH = 'couch',
+  ATHLETE = 'athlete',
 }

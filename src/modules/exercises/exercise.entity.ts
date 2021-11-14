@@ -7,8 +7,11 @@ import {
   UpdateDateColumn,
   ManyToMany,
   JoinTable,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Program } from '../programs/program.entity';
+import { User } from '../users/user.entity';
 
 @Entity('exercise')
 export class Exercise extends BaseEntity {
@@ -33,4 +36,10 @@ export class Exercise extends BaseEntity {
   })
   @JoinTable({ name: 'exercises_for_programs' })
   programs: Program[];
+
+  // @ManyToOne(() => User, (author) => author.id, {
+  //   eager: true,
+  // })
+  // @JoinColumn({ name: 'author' })
+  // author: User;
 }

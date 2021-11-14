@@ -2,8 +2,10 @@
   
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Program } from '../programs/program.entity';
+import { ProgramService } from '../programs/program.service';
+import { User } from '../users/user.entity';
 
 import { addExerciseDto } from './dto/addExerciseDto';
 import { UpdateExerciseDto } from './dto/updateExerciseDto';
@@ -14,20 +16,14 @@ export class ExerciseService {
   constructor(
     @InjectRepository(Exercise)
     private exerciseRepository: Repository<Exercise>,
-    private connection: Connection,
+    private programService: ProgramService,
   ) {}
 
   // CREATE EXERCISE
   async createExercise(exercise: addExerciseDto) {
-    const newExercise = new Exercise();
-    const program = new Program();
-
-    // program.exercises = [exercise.exercises]
-    newExercise.name = exercise.name;
-    newExercise.description = exercise.description;
-    // newExercise.programs = program
-
-    return await this.connection.manager.save(newExercise);
+    const newExercise = this.exerciseRepository.create(exercise);
+    // const program = await this.programService.getProgramById();
+    return await this.exerciseRepository.save({ ...newExercise });
 
     // const newExercise = this.exerciseRepository.create(exercise);
     // return await this.exerciseRepository.save(newExercise);

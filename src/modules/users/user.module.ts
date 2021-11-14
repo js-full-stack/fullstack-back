@@ -5,6 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { UserController } from './user.controller';
 import { AuthController } from '../auth/auth.controller';
 import { User } from './user.entity';
+import { APP_GUARD } from '@nestjs/core';
 @Module({
   controllers: [UserController],
   providers: [UserService],

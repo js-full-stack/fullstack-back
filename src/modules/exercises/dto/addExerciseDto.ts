@@ -1,3 +1,4 @@
+import { Optional } from '@nestjs/common';
 import { IsNotEmpty, Length } from 'class-validator';
 
 export class addExerciseDto {
@@ -8,4 +9,7 @@ export class addExerciseDto {
   @IsNotEmpty()
   @Length(10, 200)
   description: string;
+
+  @Optional()
+  programId: number;
 }

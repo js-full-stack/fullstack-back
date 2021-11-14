@@ -17,7 +17,8 @@ import { createProgramDto } from './dto/createProgramDto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import RequestWithUser from '../auth/requestWithUser.interface';
 import { Roles } from 'src/utils/roles.decorator';
-import { userRoles } from 'src/utils/constants';
+import { Role } from 'src/utils/constants';
+import { RolesGuard } from '../auth/guards/roles-auth.guard';
 
 @Controller('program')
 export class ProgramController {
@@ -26,7 +27,8 @@ export class ProgramController {
   // ADD NEW PROGRAM
   @Post('/')
   @UseGuards(JwtAuthGuard)
-  @Roles(userRoles.Couch)
+  @Roles(Role.COUCH)
+  @UseGuards(RolesGuard)
   @UsePipes(ValidationPipe)
   async createProgram(
     @Body() newProgram: createProgramDto,
@@ -36,7 +38,6 @@ export class ProgramController {
   }
 
   // GET ALL PROGRAMS
-
   @Get('/')
   async getAllPrograms() {
     return await this.programService.getAllPrograms();
