@@ -44,7 +44,7 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Role, (role) => role.id, {
+  @ManyToOne(() => Role, (role) => role.role, {
     cascade: true,
     eager: true,
   })

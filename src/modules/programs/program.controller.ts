@@ -33,6 +33,7 @@ export class ProgramController {
   ) {}
 
   // ADD NEW PROGRAM
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('/')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(userRoles.Couch)
@@ -50,7 +51,12 @@ export class ProgramController {
     //   role: userData.role.role,
     // };
 
-    return await this.programService.addNewProgram(newProgram, req.user);
+    const programData = await this.programService.addNewProgram(
+      newProgram,
+      req.user,
+    );
+
+    return programData;
   }
 
   // GET ALL PROGRAMS

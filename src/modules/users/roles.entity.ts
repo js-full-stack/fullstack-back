@@ -1,12 +1,11 @@
 import { IsIn } from 'class-validator';
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from './user.entity';
+import { BaseEntity, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity('roles')
 export class Role extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  // @PrimaryGeneratedColumn()
+  // id: number;
 
-  @Column()
+  @PrimaryColumn()
   role: string;
 }
