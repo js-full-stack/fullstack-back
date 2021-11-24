@@ -10,12 +10,12 @@ import {
   ManyToOne,
   JoinColumn,
   BeforeUpdate,
+  OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from './roles.entity';
-// import { UsersProgramsEntity } from '../commonTables/usersPrograms.entity';
 import { Exclude, Transform } from 'class-transformer';
-import { Program } from '../programs/program.entity';
+import { ProgramsForAthletes } from '../programs/programsForAthletes.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -51,6 +51,12 @@ export class User extends BaseEntity {
   @JoinColumn({ name: 'role' })
   @Transform(({ value }) => value.role)
   role: Role;
+
+  @OneToMany(
+    () => ProgramsForAthletes,
+    (programsForAthletes) => programsForAthletes.programId,
+  )
+  programsToAthletes: ProgramsForAthletes[];
 
   @BeforeInsert()
   @BeforeUpdate()

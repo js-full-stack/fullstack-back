@@ -13,6 +13,7 @@ import { Exercise } from '../exercises/exercise.entity';
 import { ExerciseToProgram } from '../exercises/exercisesToPrograms.entity';
 
 import { User } from '../users/user.entity';
+import { ProgramsForAthletes } from './programsForAthletes.entity';
 
 @Entity('program')
 export class Program extends BaseEntity {
@@ -43,9 +44,6 @@ export class Program extends BaseEntity {
   @JoinColumn({ name: 'author' })
   author: User;
 
-  @ManyToOne(() => User, (subscriber) => subscriber.id, {
-    eager: true,
-  })
   @JoinColumn({ name: 'subscriber' })
   subscriber: number;
 
@@ -54,6 +52,12 @@ export class Program extends BaseEntity {
     (exerciseToProgram) => exerciseToProgram.exerciseId,
   )
   exerciseToProgram: ExerciseToProgram[];
+
+  @OneToMany(
+    () => ProgramsForAthletes,
+    (programsForAthletes) => programsForAthletes.userId,
+  )
+  programsToAthletes: ProgramsForAthletes[];
 }
 
  
