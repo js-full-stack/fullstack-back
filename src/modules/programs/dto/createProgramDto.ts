@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Length,
+  MinLength,
+} from 'class-validator';
 import { User } from 'src/modules/users/user.entity';
 
 export class createProgramDto {
@@ -9,7 +15,7 @@ export class createProgramDto {
 
   @IsNotEmpty()
   @IsString()
-  @Length(10, 200)
+  @MinLength(20)
   description: string;
 
   @IsNotEmpty()

@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsNumber,
@@ -5,6 +6,7 @@ import {
   IsString,
   Length,
 } from 'class-validator';
+import { addExerciseDto } from 'src/modules/exercises/dto/addExerciseDto';
 
 export class updateProgramDto {
   @IsNotEmpty()
@@ -28,4 +30,12 @@ export class updateProgramDto {
   @IsNumber()
   @IsOptional()
   duration: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @IsOptional()
+  exerciseId: number;
+
+  @Type(() => addExerciseDto)
+  exercises: addExerciseDto[];
 }

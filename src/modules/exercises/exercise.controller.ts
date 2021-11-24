@@ -17,7 +17,9 @@ import { addExerciseDto } from './dto/addExerciseDto';
 import { Exercise } from './exercise.entity';
 import { UpdateExerciseDto } from './dto/updateExerciseDto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import RequestWithUser from '../auth/requestWithUser.interface';
+import { RolesGuard } from '../auth/guards/roles-auth.guard';
+import { Roles } from 'src/utils/roles.decorator';
+import { userRoles } from 'src/utils/constants';
 import { Program } from '../programs/program.entity';
 
 @Controller('exercise')
@@ -26,7 +28,8 @@ export class ExerciseController {
 
   // CREATE EXERCISE
   @Post('/')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(userRoles.Couch)
   @UsePipes(ValidationPipe)
   async createExercise(@Body() exercise: addExerciseDto) {
     return await this.exerciseService.createExercise(exercise);
@@ -45,6 +48,8 @@ export class ExerciseController {
   }
 
   // UPDATE EXERCISE
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(userRoles.Couch)
   @Put('/:id')
   async updateExerciseById(
     @Param('id', ParseIntPipe) id: number,
@@ -58,4 +63,23 @@ export class ExerciseController {
   async removeExerciseById(@Param('id', ParseIntPipe) id: number) {
     return await this.exerciseService.deleteExerciseById(id);
   }
-} 
+
+  // Add EXERCISE TO PROGRAM
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(userRoles.Couch)
+  @Post('/to-program')
+  async addExerciseToProgram(@Body() { programId, exercisesId }) {
+    console.log('programId:', programId);
+    console.log('exercisesId:', exercisesId);
+    const data = exercisesId.forEach(async (exerciseId: number) => {
+      await this.exerciseService.addExerciseToProgram({
+        programId,
+        exerciseId,
+      });
+    });
+    console.log(data);
+  }
+}
+
+  
+

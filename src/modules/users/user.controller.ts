@@ -5,16 +5,20 @@ import {
   Param,
   ParseIntPipe,
   Put,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserUpdateDto } from './dto/userUpdateDto';
 
 // GET ALL USERS
 @Controller('user')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(private userService: UserService) {}
 
   // GET USER BY ID
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('/')
   async getAllUsers() {
     return await this.userService.getAllUsers();

@@ -7,17 +7,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
-  OneToMany,
   ManyToOne,
   JoinColumn,
-  ManyToMany,
-  JoinTable,
   BeforeUpdate,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from './roles.entity';
 // import { UsersProgramsEntity } from '../commonTables/usersPrograms.entity';
-import { Exclude } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
 import { Program } from '../programs/program.entity';
 
 @Entity('users')
@@ -52,6 +49,7 @@ export class User extends BaseEntity {
     eager: true,
   })
   @JoinColumn({ name: 'role' })
+  @Transform(({ value }) => value.role)
   role: Role;
 
   @BeforeInsert()

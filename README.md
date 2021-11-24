@@ -30,3 +30,4 @@
 - **GET** `/exercise/:id` - **get exercise by id** 
 - **PUT** `/exercise/:id` - **update exercise** 
 - **DELETE** `/program/:id` - **delete exercise**
+

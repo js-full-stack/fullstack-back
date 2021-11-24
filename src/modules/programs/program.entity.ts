@@ -7,10 +7,10 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
-  JoinTable,
-  ManyToMany,
+  OneToMany,
 } from 'typeorm';
 import { Exercise } from '../exercises/exercise.entity';
+import { ExerciseToProgram } from '../exercises/exercisesToPrograms.entity';
 
 import { User } from '../users/user.entity';
 
@@ -43,8 +43,17 @@ export class Program extends BaseEntity {
   @JoinColumn({ name: 'author' })
   author: User;
 
-  @ManyToMany(() => Exercise, (exercise) => exercise.programs)
-  exercises: Exercise[];
+  @ManyToOne(() => User, (subscriber) => subscriber.id, {
+    eager: true,
+  })
+  @JoinColumn({ name: 'subscriber' })
+  subscriber: number;
+
+  @OneToMany(
+    () => ExerciseToProgram,
+    (exerciseToProgram) => exerciseToProgram.exerciseId,
+  )
+  exerciseToProgram: ExerciseToProgram[];
 }
 
  

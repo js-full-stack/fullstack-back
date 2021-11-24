@@ -5,10 +5,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
-  JoinTable,
+  OneToMany,
 } from 'typeorm';
 import { Program } from '../programs/program.entity';
+import { ExerciseToProgram } from './exercisesToPrograms.entity';
 
 @Entity('exercise')
 export class Exercise extends BaseEntity {
@@ -27,10 +27,10 @@ export class Exercise extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToMany(() => Program, (program) => program.exercises, {
-    cascade: true,
-    eager: true,
-  })
-  @JoinTable({ name: 'exercises_for_programs' })
-  programs: Program[];
+  @OneToMany(
+    () => ExerciseToProgram,
+    (exerciseToProgram) => exerciseToProgram.programId,
+  )
+  exerciseToProgram: ExerciseToProgram[];
 }
+

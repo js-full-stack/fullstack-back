@@ -1,4 +1,4 @@
-import { IsNotEmpty, Length } from 'class-validator';
+import { IsNotEmpty, IsOptional, Length, MinLength } from 'class-validator';
 
 export class addExerciseDto {
   @IsNotEmpty()
@@ -6,6 +6,6 @@ export class addExerciseDto {
   name: string;
 
   @IsNotEmpty()
-  @Length(10, 200)
+  @MinLength(20)
   description: string;
 }

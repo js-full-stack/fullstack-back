@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UserRegisterDto } from './dto/userRegisterDto';
 import { UserUpdateDto } from './dto/userUpdateDto';
 import { User } from './user.entity';

@@ -6,6 +6,7 @@ import { PostgresErrorCode } from 'src/utils/constants';
 import { Repository } from 'typeorm';
 import { Exercise } from '../exercises/exercise.entity';
 import { User } from '../users/user.entity';
+import { UserService } from '../users/user.service';
 import { createProgramDto } from './dto/createProgramDto';
 import { updateProgramDto } from './dto/updateProgramDto';
 import { Program } from './program.entity';
@@ -14,27 +15,19 @@ import { Program } from './program.entity';
 export class ProgramService {
   constructor(
     @InjectRepository(Program) private programRepository: Repository<Program>,
+    @InjectRepository(Exercise)
+    private exerciseRepository: Repository<Exercise>,
+    private userService: UserService,
   ) {}
 
   // ADD NEW PROGRAM
   async addNewProgram(program: createProgramDto, author: User) {
     try {
-      // const newProgram = this.programRepository.create({
-      //   ...program,
-      //   author,
-      // });
-      // return await this.programRepository.save(newProgram);
-
-      const newProgram = new Program();
-      newProgram.name = program.name;
-      newProgram.description = program.description;
-      newProgram.price = program.price;
-      newProgram.duration = program.duration;
-
-      return this.programRepository.create({
-        ...newProgram,
+      const newProgram = this.programRepository.create({
+        ...program,
         author,
       });
+      return await this.programRepository.save(newProgram);
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
         return new HttpException(
@@ -48,7 +41,7 @@ export class ProgramService {
 
   // GET ALL PROGRAMS
   async getAllPrograms() {
-    return await this.programRepository.find({ relations: ['exercises'] });
+    return await this.programRepository.find();
   }
 
   // GET PROGRAM BY ID
@@ -58,6 +51,12 @@ export class ProgramService {
 
   // UPDATE PROGRAM
   async updateProgram(id: number, program: updateProgramDto) {
+    const findProgram = await this.getProgramById(id);
+
+    if (!findProgram) {
+      return new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
+    }
+
     await this.programRepository.update(id, program);
     return await this.getProgramById(id);
   }
@@ -66,6 +65,13 @@ export class ProgramService {
   async deleteProgramById(id: number) {
     return await this.programRepository.delete(id);
   }
+
+  // SUBSCRIBE USER
+  // async subscribeProgram(data: {programId: number, subscriberId: User}) {
+  //   const newProgram = this.programRepository.create(data);
+  //   return await this.programRepository.save(newProgram);
+  // }
 }
+
 
 
