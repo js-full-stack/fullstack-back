@@ -15,7 +15,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { Role } from './roles.entity';
 import { Exclude, Transform } from 'class-transformer';
-import { ProgramsForAthletes } from '../programs/programsForAthletes.entity';
+// import { ProgramsForAthletes } from '../programs/programsForAthletes.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -52,11 +52,11 @@ export class User extends BaseEntity {
   @Transform(({ value }) => value.role)
   role: Role;
 
-  @OneToMany(
-    () => ProgramsForAthletes,
-    (programsForAthletes) => programsForAthletes.programId,
-  )
-  programsToAthletes: ProgramsForAthletes[];
+  // @OneToMany(
+  //   () => ProgramsForAthletes,
+  //   (programsForAthletes) => programsForAthletes,
+  // )
+  // programsToAthletes: ProgramsForAthletes[];
 
   @BeforeInsert()
   @BeforeUpdate()

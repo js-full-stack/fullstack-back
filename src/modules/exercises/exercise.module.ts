@@ -13,7 +13,7 @@ import { ExerciseToProgram } from './exercisesToPrograms.entity';
   controllers: [ExerciseController],
   providers: [ExerciseService],
   imports: [
-    TypeOrmModule.forFeature([Exercise, Program]),
+    TypeOrmModule.forFeature([Exercise, Program, ExerciseToProgram]),
     forwardRef(() => ProgramModule),
   ],
 })

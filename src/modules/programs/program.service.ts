@@ -10,6 +10,7 @@ import { UserService } from '../users/user.service';
 import { createProgramDto } from './dto/createProgramDto';
 import { updateProgramDto } from './dto/updateProgramDto';
 import { Program } from './program.entity';
+// import { ProgramsForAthletes } from './programsForAthletes.entity';  
 
 @Injectable()
 export class ProgramService {
@@ -17,6 +18,7 @@ export class ProgramService {
     @InjectRepository(Program) private programRepository: Repository<Program>,
     @InjectRepository(Exercise)
     private exerciseRepository: Repository<Exercise>,
+    // private programsForAthleteRepository: Repository<ProgramsForAthletes>,
     private userService: UserService,
   ) {}
 
@@ -67,10 +69,10 @@ export class ProgramService {
   }
 
   // SUBSCRIBE USER
-  // async subscribeProgram(data: {programId: number, subscriberId: User}) {
-  //   const newProgram = this.programRepository.create(data);
-  //   return await this.programRepository.save(newProgram);
-  // }
+  async subscribeProgram(data: { programId: number; userId: number }) {
+    // const newProgram = this.programRepository.create(data);
+    // return await this.programRepository.save(newProgram);
+  }
 }
 
 

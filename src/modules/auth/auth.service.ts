@@ -9,6 +9,9 @@ import { PostgresErrorCode } from 'src/utils/constants';
 import { UserService } from '../users/user.service';
 import { Connection, Repository } from 'typeorm';
 
+
+export const tokens = [];
+
 export class AuthService {
   constructor(
     @InjectRepository(User)
@@ -52,6 +55,14 @@ export class AuthService {
       sub: user.id,
       role: user.role,
     };
+
+    const accessToken = {
+      access_token: this.jwtService.sign(payload),
+    };
+
+    tokens.push(accessToken);
+    console.log(tokens);
+
     return {
       access_token: this.jwtService.sign(payload),
     };
@@ -76,5 +87,11 @@ export class AuthService {
     if (!isMatch) {
       throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST);
     }
+  }
+
+  // LOGOUT
+
+  async logout() {
+    //
   }
 }

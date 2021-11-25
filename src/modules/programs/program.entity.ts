@@ -13,11 +13,18 @@ import { Exercise } from '../exercises/exercise.entity';
 import { ExerciseToProgram } from '../exercises/exercisesToPrograms.entity';
 
 import { User } from '../users/user.entity';
-import { ProgramsForAthletes } from './programsForAthletes.entity';
+// import { ProgramsForAthletes } from './programsForAthletes.entity';
 
 @Entity('program')
 export class Program extends BaseEntity {
-  @PrimaryGeneratedColumn()
+
+  @OneToMany(
+    () => ExerciseToProgram,
+    (exerciseToProgram) => exerciseToProgram.exerciseId,
+  )
+  exerciseToProgram: ExerciseToProgram[];
+
+  @PrimaryGeneratedColumn()  
   id: number;
 
   @Column({ unique: true })
@@ -44,21 +51,14 @@ export class Program extends BaseEntity {
   @JoinColumn({ name: 'author' })
   author: User;
 
-  @JoinColumn({ name: 'subscriber' })
-  subscriber: number;
+  // @OneToMany(
+  //   () => ProgramsForAthletes,
+  //   (programsForAthletes) => programsForAthletes,
+  // )
+  // programsToAthletes: ProgramsForAthletes[];
 
-  @OneToMany(
-    () => ExerciseToProgram,
-    (exerciseToProgram) => exerciseToProgram.exerciseId,
-  )
-  exerciseToProgram: ExerciseToProgram[];
 
-  @OneToMany(
-    () => ProgramsForAthletes,
-    (programsForAthletes) => programsForAthletes.userId,
-  )
-  programsToAthletes: ProgramsForAthletes[];
-}
+}  
 
  
 

@@ -71,13 +71,12 @@ export class ExerciseController {
   async addExerciseToProgram(@Body() { programId, exercisesId }) {
     console.log('programId:', programId);
     console.log('exercisesId:', exercisesId);
-   exercisesId.forEach(async (exerciseId: number) => {
+    exercisesId.forEach(async (exerciseId: number) => {
       await this.exerciseService.addExerciseToProgram({
         programId,
         exerciseId,
       });
     });
-    // console.log(data);
   }
 }
 

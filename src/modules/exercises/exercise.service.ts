@@ -18,7 +18,7 @@ export class ExerciseService {
   constructor(
     @InjectRepository(Exercise)
     private exerciseRepository: Repository<Exercise>,
-    @InjectRepository(Program)
+    @InjectRepository(ExerciseToProgram)
     private exerciseToProgramRepository: Repository<ExerciseToProgram>,
   ) {}
   // private programRepository: Repository<Program>,
@@ -61,6 +61,8 @@ export class ExerciseService {
   async deleteExerciseFromProgram(data: {
     programId: number;
     exerciseId: number;
-  }) {}
+  }) {
+    return await this.exerciseToProgramRepository.delete(data);
+  }
 }
 

@@ -4,8 +4,7 @@ import { Exercise } from './exercise.entity';
 
 @Entity()
 export class ExerciseToProgram {
-  // @PrimaryGeneratedColumn()
-  // exerciseToProgramId: number;
+
 
   @PrimaryColumn()
   @ManyToOne(() => Exercise, (exercise) => exercise.id)

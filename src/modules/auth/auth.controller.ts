@@ -14,9 +14,10 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
+
 import { SETTINGS } from 'src/utils/constants';
 import { UserRegisterDto } from '../users/dto/userRegisterDto';
-import { AuthService } from './auth.service';
+import { AuthService, tokens } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import RequestWithUser from './authUser.interface';
@@ -53,9 +54,12 @@ export class AuthController {
     return { user };
   }
 
-  // @UseGuards(LocalAuthGuard)
-  // @Get('/logout')
-  // logOut(@Request() req: Request, @Response() res: Response) {}
+  @UseGuards(LocalAuthGuard)
+  @Get('/logout')
+  logOut(@Request() req: RequestWithUser) {
+    req.user = undefined;
+    return req.user;
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
@@ -70,5 +74,7 @@ export class AuthController {
       id: userProfile.id,
     };
     return user;
+    // return req.user.id;
   }
 }
+   

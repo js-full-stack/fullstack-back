@@ -27,7 +27,6 @@ import { UserService } from '../users/user.service';
 @Controller('program')
 export class ProgramController {
   constructor(
-    // @Inject(forwardRef(() => ProgramService))
     private programService: ProgramService,
     private userService: UserService,
   ) {}
@@ -92,15 +91,20 @@ export class ProgramController {
   }
 
   // SUBSCRIBE
-  @Post('/susbscribe')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(userRoles.Athlete)
+  // @Post('/subscribe')
+  // @UseGuards(JwtAuthGuard)
+  // @Roles(userRoles.Athlete)
   // @UsePipes(ValidationPipe)
-  async subscribeToProgram(
-    @Body() programId: number,
-    @Request() req: RequestWithUser,
-  ) {
-    //
-  }
+  // async subscribeToProgram(
+  // @Body() programId: number,
+  // @Request() req: RequestWithUser,
+  // ) {
+  // console.log('req.user', req.user);
+  // const data = {programId, req.user.id}
+  // return await this.programService.subscribeProgram({
+  // programId,
+  // userId: req.user.id,
+  // });
+  // }
 }
  
