@@ -7,14 +7,14 @@ import { UserModule } from '../users/user.module';
 import { ProgramController } from './program.controller';
 import { Program } from './program.entity';
 import { ProgramService } from './program.service';
+import { ProgramsForAthletes } from './programsForAthletes.entity';
 
 @Module({
   controllers: [ProgramController],
   providers: [ProgramService],
   imports: [
-    TypeOrmModule.forFeature([Program, Exercise, User]),
-    forwardRef(() => ExerciseModule),
-    forwardRef(() => UserModule),
+    TypeOrmModule.forFeature([Program, Exercise, User, ProgramsForAthletes]),
+    UserModule,
   ],
   exports: [ProgramService],
 })

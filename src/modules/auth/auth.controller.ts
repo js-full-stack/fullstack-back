@@ -22,7 +22,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import RequestWithUser from './authUser.interface';
 import { UserService } from '../users/user.service';
-Request;
+// import {  } from 'passport';
 @Controller('')
 export class AuthController {
   constructor(
@@ -54,11 +54,12 @@ export class AuthController {
     return { user };
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/logout')
-  logOut(@Request() req: RequestWithUser) {
-    req.user = undefined;
-    return req.user;
+  logOut(@Request() req, res) {
+    req.logout();
+    // res.redirect('/')
+   
   }
 
   @UseGuards(JwtAuthGuard)

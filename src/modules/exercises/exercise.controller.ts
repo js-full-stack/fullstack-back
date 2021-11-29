@@ -64,20 +64,18 @@ export class ExerciseController {
     return await this.exerciseService.deleteExerciseById(id);
   }
 
-  // Add EXERCISE TO PROGRAM
+  // !Add EXERCISE TO PROGRAM
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(userRoles.Couch)
   @Post('/to-program')
-  async addExerciseToProgram(@Body() { programId, exercisesId }) {
-    console.log('programId:', programId);
-    console.log('exercisesId:', exercisesId);
-    exercisesId.forEach(async (exerciseId: number) => {
-      await this.exerciseService.addExerciseToProgram({
-        programId,
-        exerciseId,
-      });
-    });
+  addExerciseToProgram(@Body() { programId, exercisesId }) {
+    return this.exerciseService.addExerciseToProgram(programId, exercisesId);
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(userRoles.Couch)
+  @Delete('/to-program')
+  async removeExerciseFromProgram(@Param('id', ParseIntPipe) id: number) {}
 }
 
   

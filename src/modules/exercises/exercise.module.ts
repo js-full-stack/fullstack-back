@@ -8,13 +8,14 @@ import { ProgramService } from '../programs/program.service';
 import { ExerciseController } from './exercise.controller';
 import { Exercise } from './exercise.entity';
 import { ExerciseService } from './exercise.service';
-import { ExerciseToProgram } from './exercisesToPrograms.entity';
+import { ExercisesToProgram } from './exercisesToPrograms.entity';
 @Module({
   controllers: [ExerciseController],
   providers: [ExerciseService],
   imports: [
-    TypeOrmModule.forFeature([Exercise, Program, ExerciseToProgram]),
-    forwardRef(() => ProgramModule),
+    TypeOrmModule.forFeature([Exercise, Program, ExercisesToProgram]),
+    // ProgramModule,
   ],
 })
-export class ExerciseModule {}
+export class ExerciseModule {}    
+  

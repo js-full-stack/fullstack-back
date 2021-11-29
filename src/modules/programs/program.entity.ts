@@ -1,3 +1,5 @@
+import { Exclude } from 'class-transformer';
+import { IsOptional } from 'class-validator';
 import {
   BaseEntity,
   Entity,
@@ -10,25 +12,19 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Exercise } from '../exercises/exercise.entity';
-import { ExerciseToProgram } from '../exercises/exercisesToPrograms.entity';
+import { ExercisesToProgram } from '../exercises/exercisesToPrograms.entity';
 
 import { User } from '../users/user.entity';
-// import { ProgramsForAthletes } from './programsForAthletes.entity';
+import { ProgramsForAthletes } from './programsForAthletes.entity';
 
 @Entity('program')
 export class Program extends BaseEntity {
-
-  @OneToMany(
-    () => ExerciseToProgram,
-    (exerciseToProgram) => exerciseToProgram.exerciseId,
-  )
-  exerciseToProgram: ExerciseToProgram[];
-
-  @PrimaryGeneratedColumn()  
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ unique: true })
   name: string;
+
 
   @Column()
   description: string;
@@ -45,20 +41,20 @@ export class Program extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  // SUBSCRIBE
+  @OneToMany(
+    () => ProgramsForAthletes,
+    (programsForAthletes) => programsForAthletes,
+  )
+  programsToAthletes: ProgramsForAthletes[];
+
+  // EXERCISES TO PROGRAM
+  @OneToMany(() => ExercisesToProgram, (exerciseToProgram) => exerciseToProgram)
+  exerciseToProgram: ExercisesToProgram[];
+
   @ManyToOne(() => User, (author) => author.id, {
     eager: true,
   })
   @JoinColumn({ name: 'author' })
   author: User;
-
-  // @OneToMany(
-  //   () => ProgramsForAthletes,
-  //   (programsForAthletes) => programsForAthletes,
-  // )
-  // programsToAthletes: ProgramsForAthletes[];
-
-
-}  
-
- 
-
+}

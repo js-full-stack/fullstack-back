@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Program } from '../programs/program.entity';
-import { ExerciseToProgram } from './exercisesToPrograms.entity';
+import { ExercisesToProgram } from './exercisesToPrograms.entity';
 
 @Entity('exercise')
 export class Exercise extends BaseEntity {
@@ -27,10 +27,7 @@ export class Exercise extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(
-    () => ExerciseToProgram,
-    (exerciseToProgram) => exerciseToProgram.programId,
-  )
-  exerciseToProgram: ExerciseToProgram[];
+  @OneToMany(() => ExercisesToProgram, (exerciseToProgram) => exerciseToProgram)
+  exerciseToProgram: ExercisesToProgram[];
 }
 
