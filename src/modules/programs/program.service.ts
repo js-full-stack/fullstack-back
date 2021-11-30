@@ -1,6 +1,6 @@
 
   
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostgresErrorCode } from 'src/utils/constants';
 import { Repository } from 'typeorm';
@@ -40,30 +40,44 @@ export class ProgramService {
   }
 
   // GET ALL PROGRAMS
-  // Role couch, athlete
-  async getAllPrograms(author: User) {
+  async getProgramsForAuthor(author: User) {
     let allPrograms = [];
+    const authorPrograms = await this.programRepository.find({
+      author,
+    });
     const subscribe = await this.programsForAthleteRepository.find({});
+
     const subscribeProgramsIds = subscribe.map(({ programId }) => programId);
 
-    if (author.role.role === 'couch') {
-      const couchPrograms = await this.programRepository.find({
-        author,
-      });
-      return couchPrograms;
-    } else {
-      const programs = await this.programRepository.find();
+    authorPrograms.map((program) => {
+      if (subscribeProgramsIds.includes(program.id)) {
+        allPrograms.push({ program, isAnySubscribers: true });
+      } else {
+        allPrograms.push({ program, isAnySubscribers: false });
+      }
+    });
+    return allPrograms;
+  }
 
-      programs.map((program) => {
-        if (subscribeProgramsIds.includes(program.id)) {
-          allPrograms.push({ program, isSubscribe: true });
-        } else {
-          allPrograms.push({ program, isSubscribe: false });
-        }
-      });
+  async getProgramsForUser(user: User) {
+    let allPrograms = [];
+    const subscribe = await this.programsForAthleteRepository.find({
+      where: {
+        userId: user.id,
+      },
+    });
 
-      return allPrograms;
-    }
+    const programs = await this.programRepository.find();
+
+    programs.map((program) => {
+      if (subscribe.find(({ programId }) => programId === program.id)) {
+        allPrograms.push({ program, isSubscribe: true });
+      } else {
+        allPrograms.push({ program, isSubscribe: false });
+      }
+    });
+
+    return allPrograms;
   }
 
   // GET PROGRAM BY ID

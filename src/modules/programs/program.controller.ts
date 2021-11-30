@@ -26,6 +26,7 @@ import { UserService } from '../users/user.service';
 import { ProgramsForAthletes } from './programsForAthletes.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { count } from 'console';
 
 @Controller('program')
 export class ProgramController {
@@ -60,12 +61,28 @@ export class ProgramController {
   @Get('/')
   async getAllPrograms(@Request() req: RequestWithUser) {
     if (req.user.role.role === 'couch') {
-      return await this.programService.getAllPrograms(req.user);
-    } else {
-      const programsForAthlete = await this.programService.getAllPrograms(
-        req.user,
+      const programs = await this.programService.getProgramsForAuthor(req.user);
+
+      const programsForAthlete = programs.map(
+        ({ program, isAnySubscribers }) => {
+          return {
+            id: program.id,
+            name: program.name,
+            description: program.description,
+            duration: program.duration,
+            price: program.price,
+            createdAt: program.createdAt,
+            updatedAt: program.updatedAt,
+            author: program.author,
+            isAnySubscribers,
+          };
+        },
       );
-      const programs = programsForAthlete.map(({ program, isSubscribe }) => {
+      return programsForAthlete;
+    } else {
+      const programs = await this.programService.getProgramsForUser(req.user);
+
+      const programsForAthlete = programs.map(({ program, isSubscribe }) => {
         return {
           id: program.id,
           name: program.name,
@@ -78,27 +95,8 @@ export class ProgramController {
           isSubscribe,
         };
       });
-      return programs;
+      return programsForAthlete;
     }
-
-    // else {
-    // const allPrograms = await this.programService.getAllPrograms(req.user);
-    // const allSubscription = await this.programsForAthleteRepository.find({
-    // select: ['programId'],
-    // });
-    // let programs = [];
-
-    // allPrograms.map((program) => {
-    // allSubscription.map(({ programId }) => {
-    // if (program.id === programId) {
-    // programs.push({ program, isSubscribe: true });
-    // } else {
-    // programs.push({ program, isSubscribe: false });
-    // }
-    // });
-    // });
-
-    // }
   }
 
   // GET PROGRAM BY ID

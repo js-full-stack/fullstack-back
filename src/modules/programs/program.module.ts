@@ -19,3 +19,4 @@ import { ProgramsForAthletes } from './programsForAthletes.entity';
   exports: [ProgramService],
 })
 export class ProgramModule {}
+  
