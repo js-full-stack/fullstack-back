@@ -29,7 +29,7 @@ export class AuthService {
       const newUser = new User();
 
       newUser.firstName = user.firstName;
-      newUser.lastName = user.lastName;
+      newUser.lastName = user.lastName;  
       newUser.phone = user.phone;
       newUser.email = user.email;
       newUser.password = user.password;
@@ -38,13 +38,13 @@ export class AuthService {
       return await this.connection.manager.save(newUser);
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation)
-        return new HttpException(
-          `User with this email alredy exist`,
+        throw new HttpException(
+          `This email exist`,
           HttpStatus.BAD_REQUEST,
         );
     }
-    return new HttpException(
-      'Something went wrong',
+    throw new HttpException(
+      'Wrong data registration',
       HttpStatus.INTERNAL_SERVER_ERROR,
     );
   }
@@ -61,7 +61,6 @@ export class AuthService {
     };
 
     tokens.push(accessToken);
-    console.log(tokens);
 
     return {
       access_token: this.jwtService.sign(payload),
@@ -75,23 +74,14 @@ export class AuthService {
       await this.validatePassword(password, user.password);
       return user;
     } catch (error) {
-      return new HttpException(
-        'Wrong credentials provided',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw error
     }
   }
 
   async validatePassword(password: string, hashedPassword: string) {
     const isMatch = await bcrypt.compare(password, hashedPassword);
     if (!isMatch) {
-      throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Wrong email or password', HttpStatus.BAD_REQUEST);
     }
-  }
-
-  // LOGOUT
-
-  async logout() {
-    //
   }
 }

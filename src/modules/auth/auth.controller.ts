@@ -34,24 +34,33 @@ export class AuthController {
   @UseInterceptors(ClassSerializerInterceptor)
   @UsePipes(ValidationPipe)
   async createUser(@Body(SETTINGS.VALIDATION_PIPE) user: UserRegisterDto) {
-    return await this.authService.registration(user);
+    try {
+      return await this.authService.registration(user);
+    } catch (error) {
+      throw error
+      
+    }
   }
 
   @UseGuards(LocalAuthGuard)
   @HttpCode(200)
   @Post('auth/login')
   async authUser(@Request() req: RequestWithUser) {
-    const token = await this.authService.login(req.user);
-    const user = {
-      email: req.user.email,
-      firstName: req.user.firstName,
-      lastName: req.user.lastName,
-      phone: req.user.phone,
-      role: req.user.role.role,
-      id: req.user.id,
-      token: token.access_token,
-    };
-    return { user };
+    try {
+      const token = await this.authService.login(req.user);
+      const user = {
+        email: req.user.email,
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        phone: req.user.phone,
+        role: req.user.role.role,
+        id: req.user.id,
+        token: token.access_token,
+      };
+      return { user };
+    } catch (error) {
+     return {error: error.message}
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -59,7 +68,6 @@ export class AuthController {
   logOut(@Request() req, res) {
     req.logout();
     // res.redirect('/')
-   
   }
 
   @UseGuards(JwtAuthGuard)

@@ -4,21 +4,20 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  Length,
+  MinLength,
 } from 'class-validator';
 import { addExerciseDto } from 'src/modules/exercises/dto/addExerciseDto';
 
 export class updateProgramDto {
   @IsNotEmpty()
   @IsString()
-  @Length(5, 50)
   @IsOptional()
   name: string;
 
   @IsNotEmpty()
   @IsString()
   @IsOptional()
-  @Length(10, 200)
+  @MinLength(20)
   description: string;
 
   @IsNotEmpty()

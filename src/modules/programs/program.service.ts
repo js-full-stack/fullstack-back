@@ -46,7 +46,6 @@ export class ProgramService {
       author,
     });
     const subscribe = await this.programsForAthleteRepository.find({});
-
     const subscribeProgramsIds = subscribe.map(({ programId }) => programId);
 
     authorPrograms.map((program) => {
@@ -87,12 +86,6 @@ export class ProgramService {
 
   // UPDATE PROGRAM
   async updateProgram(id: number, program: updateProgramDto) {
-    const findProgram = await this.getProgramById(id);
-
-    if (!findProgram) {
-      return new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
-    }
-
     await this.programRepository.update(id, program);
     return await this.getProgramById(id);
   }

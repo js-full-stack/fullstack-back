@@ -9,18 +9,17 @@ import {
   Param,
   ParseIntPipe,
   UseGuards,
-  Request,
   Put,
+  Request,
 } from '@nestjs/common';
 import { ExerciseService } from './exercise.service';
 import { addExerciseDto } from './dto/addExerciseDto';
-import { Exercise } from './exercise.entity';
 import { UpdateExerciseDto } from './dto/updateExerciseDto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles-auth.guard';
 import { Roles } from 'src/utils/roles.decorator';
 import { userRoles } from 'src/utils/constants';
-import { Program } from '../programs/program.entity';
+import RequestWithUser from '../auth/authUser.interface';
 
 @Controller('exercise')
 export class ExerciseController {
@@ -31,14 +30,18 @@ export class ExerciseController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(userRoles.Couch)
   @UsePipes(ValidationPipe)
-  async createExercise(@Body() exercise: addExerciseDto) {
-    return await this.exerciseService.createExercise(exercise);
+  async createExercise(
+    @Body() exercise: addExerciseDto,
+    @Request() req: RequestWithUser,
+  ) {
+    return await this.exerciseService.createExercise(exercise, req.user.id);
   }
 
   // GET ALL EXERCISES
+  @UseGuards(JwtAuthGuard)
   @Get('/')
-  async getAllExercises() {
-    return await this.exerciseService.getAllExercises();
+  async getAllExercises(@Request() req: RequestWithUser) {
+    return await this.exerciseService.getAllExercises(req.user.id);
   }
 
   // GET EXERCISE BY ID
@@ -57,26 +60,33 @@ export class ExerciseController {
   ) {
     return await this.exerciseService.updateExerciseById(id, updatedExercise);
   }
-
   // DELETE EXERCISE
   @Delete('/:id')
   async removeExerciseById(@Param('id', ParseIntPipe) id: number) {
     return await this.exerciseService.deleteExerciseById(id);
   }
 
-  // !Add EXERCISE TO PROGRAM
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(userRoles.Couch)
   @Post('/to-program')
   addExerciseToProgram(@Body() { programId, exercisesId }) {
-    return this.exerciseService.addExerciseToProgram(programId, exercisesId);
+    const response = exercisesId.map(async (exerciseId: number) => {
+      const result = await this.exerciseService.addAndDeleteProgramExercises({
+        programId,
+        exerciseId,
+      });
+      return result;
+    });
+
+    return Promise.all(response);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(userRoles.Couch)
-  @Delete('/to-program')
-  async removeExerciseFromProgram(@Param('id', ParseIntPipe) id: number) {}
+  @UseGuards(JwtAuthGuard)
+  @Get('/to-program')
+  async getExercisesToProgram() {
+    await this.exerciseService.getAllExercisesToProgram();
+  }
 }
-
+ 
   
-
+  

@@ -1,14 +1,13 @@
 import { Optional } from '@nestjs/common';
-import { IsNotEmpty, Length } from 'class-validator';
+import { IsNotEmpty, Length, MinLength } from 'class-validator';
 
 export class UpdateExerciseDto {
   @Optional()
   @IsNotEmpty()
-  @Length(5, 50)
   name: string;
 
   @Optional()
   @IsNotEmpty()
-  @Length(10, 200)
+  @MinLength(20)
   descsripton: string;
 }

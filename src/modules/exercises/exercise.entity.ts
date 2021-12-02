@@ -6,8 +6,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
-import { Program } from '../programs/program.entity';
+import { User } from '../users/user.entity';
 import { ExercisesToProgram } from './exercisesToPrograms.entity';
 
 @Entity('exercise')
@@ -29,5 +31,12 @@ export class Exercise extends BaseEntity {
 
   @OneToMany(() => ExercisesToProgram, (exerciseToProgram) => exerciseToProgram)
   exerciseToProgram: ExercisesToProgram[];
+
+  @ManyToOne(() => User, (author) => author.id, {
+    eager: true,
+  })
+  @JoinColumn({ name: 'authorId' })
+  authorId: number;
 }
 
+  

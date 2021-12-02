@@ -10,7 +10,6 @@ export class UserRegisterDto {
   lastName: string;
 
   @IsNotEmpty()
-  // @IsEmail()
   email: string;
 
   @IsNotEmpty()

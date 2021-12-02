@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Program } from '../programs/program.entity';
 import { ProgramService } from '../programs/program.service';
+import { User } from '../users/user.entity';
 
 import { addExerciseDto } from './dto/addExerciseDto';
 import { UpdateExerciseDto } from './dto/updateExerciseDto';
@@ -22,15 +23,18 @@ export class ExerciseService {
   // private programRepository: Repository<Program>,
   // private programService: ProgramService,
   //* CREATE EXERCISE
-  async createExercise(exercise: addExerciseDto) {
-    const newExercise = this.exerciseRepository.create(exercise);
+  async createExercise(exercise: addExerciseDto, authorId: number) {
+    const newExercise = this.exerciseRepository.create({
+      ...exercise,
+      authorId,
+    });
 
     return await this.exerciseRepository.save(newExercise);
   }
 
   //* GET ALL EXERCISES
-  async getAllExercises() {
-    return await this.exerciseRepository.find();
+  async getAllExercises(authorId: number) {
+    return await this.exerciseRepository.find({ authorId });
   }
 
   //* GET EXERCISE BY ID
@@ -49,24 +53,32 @@ export class ExerciseService {
     return await this.exerciseRepository.delete(id);
   }
 
-  // ! ADD EXERCISE TO PROGRAM
-  async addExerciseToProgram(programId: number, exerciseId: number[]) {
-    const currentExercises = await this.exerciseToProgramRepository.find({
-      where: {
-        programId,
-      },
-    });
+  // * ADD or DELETE EXERCISES IN PROGRAM
 
-    return currentExercises;
-  }
-
-  // ! DELETE EXERCISE FROM FROGRAM
-  async deleteExerciseFromProgram(data: {
+  async addAndDeleteProgramExercises(data: {
     programId: number;
     exerciseId: number;
   }) {
-    return await this.exerciseToProgramRepository.delete(data);
+    const exercisesToProgram = await this.exerciseToProgramRepository.find({
+      where: {
+        programId: data.programId,
+      },
+    });
+
+    const match = exercisesToProgram.find(
+      ({ exerciseId }) => exerciseId === data.exerciseId,
+    );
+    if (!match) {
+      return await this.exerciseToProgramRepository.save(
+        this.exerciseToProgramRepository.create(data),
+      );
+    } else {
+      return await this.exerciseToProgramRepository.delete(data);
+    }
+  }
+
+  async getAllExercisesToProgram() {
+    const exercisesToProgram = await this.exerciseToProgramRepository.find({});
+    return exercisesToProgram;
   }
 }
-
-  

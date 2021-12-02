@@ -26,7 +26,6 @@ import { UserService } from '../users/user.service';
 import { ProgramsForAthletes } from './programsForAthletes.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { count } from 'console';
 
 @Controller('program')
 export class ProgramController {
