@@ -1,6 +1,12 @@
 
   
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Program } from '../programs/program.entity';
@@ -20,16 +26,19 @@ export class ExerciseService {
     @InjectRepository(ExercisesToProgram)
     private exerciseToProgramRepository: Repository<ExercisesToProgram>,
   ) {}
-  // private programRepository: Repository<Program>,
-  // private programService: ProgramService,
+
   //* CREATE EXERCISE
   async createExercise(exercise: addExerciseDto, authorId: number) {
-    const newExercise = this.exerciseRepository.create({
-      ...exercise,
-      authorId,
-    });
+    try {
+      const newExercise = this.exerciseRepository.create({
+        ...exercise,
+        authorId,
+      });
 
-    return await this.exerciseRepository.save(newExercise);
+      return await this.exerciseRepository.save(newExercise);
+    } catch (error) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    }
   }
 
   //* GET ALL EXERCISES
@@ -73,12 +82,14 @@ export class ExerciseService {
         this.exerciseToProgramRepository.create(data),
       );
     } else {
-      return await this.exerciseToProgramRepository.delete(data);
+      await this.exerciseToProgramRepository.delete(data);
+      return { exerciseId: null, programId: null };
     }
   }
 
-  async getAllExercisesToProgram() {
-    const exercisesToProgram = await this.exerciseToProgramRepository.find({});
-    return exercisesToProgram;
-  }
+  // async getAllExercisesToProgram(programId) {
+  //   const result = await this.exerciseToProgramRepository.find({ programId });
+  //   console.log('resssssult', result);
+  //   return result;
+  // }
 }

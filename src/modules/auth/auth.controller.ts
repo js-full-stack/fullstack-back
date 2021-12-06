@@ -13,6 +13,8 @@ import {
   ClassSerializerInterceptor,
   Req,
   Res,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 
 import { SETTINGS } from 'src/utils/constants';
@@ -22,7 +24,6 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import RequestWithUser from './authUser.interface';
 import { UserService } from '../users/user.service';
-// import {  } from 'passport';
 @Controller('')
 export class AuthController {
   constructor(
@@ -37,8 +38,7 @@ export class AuthController {
     try {
       return await this.authService.registration(user);
     } catch (error) {
-      throw error
-      
+      throw error;
     }
   }
 
@@ -59,7 +59,10 @@ export class AuthController {
       };
       return { user };
     } catch (error) {
-     return {error: error.message}
+      return new HttpException(
+        'Wrong email or password',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -67,7 +70,7 @@ export class AuthController {
   @Get('/logout')
   logOut(@Request() req, res) {
     req.logout();
-    // res.redirect('/')
+    res.redirect('/');
   }
 
   @UseGuards(JwtAuthGuard)

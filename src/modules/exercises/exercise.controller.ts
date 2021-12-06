@@ -11,6 +11,8 @@ import {
   UseGuards,
   Put,
   Request,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ExerciseService } from './exercise.service';
 import { addExerciseDto } from './dto/addExerciseDto';
@@ -34,7 +36,11 @@ export class ExerciseController {
     @Body() exercise: addExerciseDto,
     @Request() req: RequestWithUser,
   ) {
-    return await this.exerciseService.createExercise(exercise, req.user.id);
+    try {
+      return await this.exerciseService.createExercise(exercise, req.user.id);
+    } catch (error) {
+      return error.message;
+    }
   }
 
   // GET ALL EXERCISES
@@ -81,12 +87,14 @@ export class ExerciseController {
     return Promise.all(response);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('/to-program')
-  async getExercisesToProgram() {
-    await this.exerciseService.getAllExercisesToProgram();
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get('/to-program')
+  // async getExercisesToProgram() {
+  //   const result = await this.exerciseService.getAllExercisesToProgram();
+  //   console.log(result);
+  //   return result;
+  // }
 }
  
   
-  
+    
